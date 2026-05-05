@@ -11,8 +11,9 @@ export default function Page() {
       <Navbar />
       <Hero />
 
-      <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-[1fr_320px] gap-12">
+      <div className="max-w-6xl mx-auto px-6 py-12">
         <div>
+          <BookingCard />
           <ApartmentDetails />
           <Amenities />
           <CalendarPlaceholder />
@@ -22,8 +23,6 @@ export default function Page() {
             Map preview
           </div>
         </div>
-
-        <BookingCard />
       </div>
     </div>
   );

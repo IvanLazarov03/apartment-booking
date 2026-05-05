@@ -30,9 +30,9 @@ export default function Navbar() {
           className="md:hidden flex flex-col gap-1"
           onClick={() => setOpen(!open)}
         >
-          <span className="w-5 h-[2px] bg-black" />
-          <span className="w-5 h-[2px] bg-black" />
-          <span className="w-5 h-[2px] bg-black" />
+          <span className="w-5 h-0.5 bg-black" />
+          <span className="w-5 h-0.5 bg-black" />
+          <span className="w-5 h-0.5 bg-black" />
         </button>
       </div>
 
