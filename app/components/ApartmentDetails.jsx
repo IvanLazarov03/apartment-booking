@@ -4,7 +4,7 @@ export default function ApartmentDetails() {
       <h1 className="font-serif text-3xl mb-1">The Linden Apartment</h1>
 
       <p className="text-sm text-neutral-500 mb-6">
-        Mitte, Berlin · 3rd floor · East-facing
+        Paralia, Greece · 3rd floor · East-facing
       </p>
 
       {/* Stats */}

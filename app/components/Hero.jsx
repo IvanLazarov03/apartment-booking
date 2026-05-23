@@ -21,7 +21,7 @@ export default function Hero() {
             and belong.
           </h1>
 
-          <p className="text-sm text-white/60 leading-relaxed max-w-sm mb-8">
+          <p className="text-sm text-white/75 leading-relaxed max-w-sm mb-8">
             A modern minimalist apartment steps from the sea in Paralia, Greece
             — cool interiors, warm light, and the sound of waves outside.
           </p>

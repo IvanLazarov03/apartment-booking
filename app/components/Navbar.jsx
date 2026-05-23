@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const links = ["Gallery", "Amenities", "Availability", "Book"];
+  const links = ["Home", "Gallery", "Attractions", "Book"];
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 ">
@@ -31,7 +31,7 @@ export default function Navbar() {
               {links.map((item) => (
                 <Link
                   key={item}
-                  href={`/${item.toLowerCase()}`}
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                   className="
                     px-4 py-2
                     rounded-full
@@ -81,7 +81,7 @@ export default function Navbar() {
               {links.map((item) => (
                 <a
                   key={item}
-                  href={`/${item.toLowerCase()}`}
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                   onClick={() => setOpen(false)}
                   className="
                     px-4 py-3

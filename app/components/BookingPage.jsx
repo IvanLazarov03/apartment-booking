@@ -36,14 +36,13 @@ export default function BookingPage() {
 
   return (
     <section className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="relative h-80 overflow-hidden">
+      <div className="relative h-[70vh] overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80"
           alt="The Linden Apartment"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/55" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/20 to-black/55" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
           <span className="text-white/70 text-xs tracking-[0.2em] uppercase font-light">
             The Linden Apartment

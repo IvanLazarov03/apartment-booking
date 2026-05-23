@@ -47,8 +47,8 @@ export default function Footer() {
             </h3>
 
             <div className="text-sm text-neutral-600 flex flex-col gap-2">
-              <p>Strumica, North Macedonia</p>
-              <p>+389 70 000 000</p>
+              <p>Paralia, Greece</p>
+              <p>+30 70 000 000</p>
               <p>hello@habitat.com</p>
             </div>
           </div>
