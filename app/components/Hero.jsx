@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section id="gallery" className="relative h-130 overflow-hidden">
+    <section id="gallery" className="relative h-screen overflow-hidden">
       <img
         src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80"
         alt="The Linden Apartment"
