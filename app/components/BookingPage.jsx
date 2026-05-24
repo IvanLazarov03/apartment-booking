@@ -19,14 +19,41 @@ export default function BookingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: connect to your database / API route
-    // Example:
-    // await fetch("/api/bookings", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(form),
-    // });
-    console.log("Booking submitted:", form);
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error);
+        return;
+      }
+
+      alert("Booking request submitted!");
+
+      setForm({
+        email: "",
+        name: "",
+        arrival: "",
+        departure: "",
+        adults: "1",
+        children: "0",
+        specialRequest: "",
+      });
+    } catch (error) {
+      console.log(error);
+
+      alert("Something went wrong");
+    }
   };
 
   const inputClass =
