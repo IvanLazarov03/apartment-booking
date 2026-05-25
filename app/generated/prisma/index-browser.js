@@ -138,6 +138,7 @@ exports.Prisma.BookingScalarFieldEnum = {
   specialRequests: 'specialRequests',
   status: 'status',
   confirmationToken: 'confirmationToken',
+  tokenExpiresAt: 'tokenExpiresAt',
   confirmedAt: 'confirmedAt',
   createdAt: 'createdAt'
 };
@@ -147,6 +148,7 @@ exports.Prisma.BlockedDateScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   reason: 'reason',
+  bookingId: 'bookingId',
   createdAt: 'createdAt'
 };
 

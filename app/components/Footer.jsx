@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-neutral-200 bg-[#fafaf8]">
@@ -19,24 +21,25 @@ export default function Footer() {
             </h3>
 
             <div className="flex flex-col gap-2 text-sm text-neutral-600">
-              <a href="#gallery" className="hover:text-neutral-900 transition">
+              <Link href="/" className="hover:text-neutral-900 transition">
+                Home
+              </Link>
+              <Link
+                href="/gallery"
+                className="hover:text-neutral-900 transition"
+              >
                 Gallery
-              </a>
-              <a
-                href="#amenities"
+              </Link>
+              <Link
+                href="/attractions"
                 className="hover:text-neutral-900 transition"
               >
-                Amenities
-              </a>
-              <a
-                href="#availability"
-                className="hover:text-neutral-900 transition"
-              >
-                Availability
-              </a>
-              <a href="#booking" className="hover:text-neutral-900 transition">
+                Attractions
+              </Link>
+
+              <Link href="/book" className="hover:text-neutral-900 transition">
                 Book Stay
-              </a>
+              </Link>
             </div>
           </div>
 

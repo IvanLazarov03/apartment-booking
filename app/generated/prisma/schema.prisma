@@ -38,7 +38,11 @@ model Booking {
 
   confirmationToken String? @unique
 
+  tokenExpiresAt DateTime?
+
   confirmedAt DateTime?
+
+  blockedDate BlockedDate?
 
   createdAt DateTime @default(now())
 }
@@ -50,6 +54,9 @@ model BlockedDate {
   endDate   DateTime
 
   reason String?
+
+  bookingId Int?     @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }

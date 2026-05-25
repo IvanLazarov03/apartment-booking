@@ -28,7 +28,6 @@ export async function POST(req) {
               lte: new Date(arrival),
             },
           },
-
           {
             checkIn: {
               gte: new Date(departure),
@@ -52,6 +51,10 @@ export async function POST(req) {
     // Generate confirmation token
     const token = crypto.randomBytes(32).toString("hex");
 
+    //EXPIRATION (30 minutes)
+    const tokenExpiresAt = new Date();
+    tokenExpiresAt.setMinutes(tokenExpiresAt.getMinutes() + 1);
+
     // Create booking
     const booking = await prisma.booking.create({
       data: {
@@ -68,6 +71,7 @@ export async function POST(req) {
         status: "pending",
 
         confirmationToken: token,
+        tokenExpiresAt: tokenExpiresAt,
       },
     });
 
@@ -77,11 +81,8 @@ export async function POST(req) {
     // Send confirmation email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-
       to: email,
-
       subject: "Confirm Your Booking",
-
       html: `
         <div style="
           font-family: Arial;
@@ -92,11 +93,7 @@ export async function POST(req) {
           border: 1px solid #e5e5e5;
           border-radius: 12px;
         ">
-          <h1 style="
-            font-size: 28px;
-            margin-bottom: 16px;
-            color: #1a1a18;
-          ">
+          <h1 style="font-size: 28px; margin-bottom: 16px; color: #1a1a18;">
             Confirm Your Stay
           </h1>
 
@@ -110,8 +107,7 @@ export async function POST(req) {
           </p>
 
           <div style="margin: 32px 0;">
-            <a
-              href="${confirmUrl}"
+            <a href="${confirmUrl}"
               style="
                 background: #2d4a3e;
                 color: white;
@@ -121,37 +117,18 @@ export async function POST(req) {
                 display: inline-block;
                 font-size: 14px;
                 font-weight: 600;
-              "
-            >
+              ">
               Confirm Booking
             </a>
           </div>
 
-          <div style="
-            background: #f7f7f5;
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 24px;
-          ">
-            <p style="margin: 0 0 8px 0;">
-              <strong>Arrival:</strong>
-              ${arrival}
-            </p>
-
-            <p style="margin: 0;">
-              <strong>Departure:</strong>
-              ${departure}
-            </p>
+          <div style="background: #f7f7f5; padding: 16px; border-radius: 10px;">
+            <p><strong>Arrival:</strong> ${arrival}</p>
+            <p><strong>Departure:</strong> ${departure}</p>
           </div>
 
-          <p style="
-            margin-top: 32px;
-            font-size: 13px;
-            color: #777;
-            line-height: 1.6;
-          ">
-            Your reservation will only be confirmed
-            after clicking the confirmation link.
+          <p style="margin-top: 32px; font-size: 13px; color: #777;">
+            This link expires in 30 minutes.
           </p>
         </div>
       `,
@@ -164,13 +141,6 @@ export async function POST(req) {
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json(
-      {
-        error: "Server error",
-      },
-      {
-        status: 500,
-      },
-    );
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

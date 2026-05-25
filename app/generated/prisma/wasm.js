@@ -110,6 +110,7 @@ exports.Prisma.BookingScalarFieldEnum = {
   specialRequests: 'specialRequests',
   status: 'status',
   confirmationToken: 'confirmationToken',
+  tokenExpiresAt: 'tokenExpiresAt',
   confirmedAt: 'confirmedAt',
   createdAt: 'createdAt'
 };
@@ -119,6 +120,7 @@ exports.Prisma.BlockedDateScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   reason: 'reason',
+  bookingId: 'bookingId',
   createdAt: 'createdAt'
 };
 
@@ -182,7 +184,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -191,13 +192,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Admin {\n  id           Int      @id @default(autoincrement())\n  email        String   @unique\n  passwordHash String\n  createdAt    DateTime @default(now())\n}\n\nmodel Booking {\n  id Int @id @default(autoincrement())\n\n  guestName  String\n  guestEmail String\n\n  checkIn  DateTime\n  checkOut DateTime\n\n  guestsCount Int\n\n  specialRequests String?\n\n  status String @default(\"pending\")\n\n  confirmationToken String? @unique\n\n  confirmedAt DateTime?\n\n  createdAt DateTime @default(now())\n}\n\nmodel BlockedDate {\n  id Int @id @default(autoincrement())\n\n  startDate DateTime\n  endDate   DateTime\n\n  reason String?\n\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "263941f120e2ae6cd597468e1319ba5014391a021a969ff02d6e6b579837c046",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Admin {\n  id           Int      @id @default(autoincrement())\n  email        String   @unique\n  passwordHash String\n  createdAt    DateTime @default(now())\n}\n\nmodel Booking {\n  id Int @id @default(autoincrement())\n\n  guestName  String\n  guestEmail String\n\n  checkIn  DateTime\n  checkOut DateTime\n\n  guestsCount Int\n\n  specialRequests String?\n\n  status String @default(\"pending\")\n\n  confirmationToken String? @unique\n\n  tokenExpiresAt DateTime?\n\n  confirmedAt DateTime?\n\n  blockedDate BlockedDate?\n\n  createdAt DateTime @default(now())\n}\n\nmodel BlockedDate {\n  id Int @id @default(autoincrement())\n\n  startDate DateTime\n  endDate   DateTime\n\n  reason String?\n\n  bookingId Int?     @unique\n  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)\n\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "f4cfae5013b93ea7b4f7cf449eadd9bf74d16d9558069731c2763e6a2f53a00a",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Admin\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordHash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Booking\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"guestName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guestEmail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkIn\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"checkOut\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"guestsCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"specialRequests\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"confirmationToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"confirmedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"BlockedDate\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Admin\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordHash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Booking\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"guestName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guestEmail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkIn\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"checkOut\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"guestsCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"specialRequests\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"confirmationToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"confirmedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"blockedDate\",\"kind\":\"object\",\"type\":\"BlockedDate\",\"relationName\":\"BlockedDateToBooking\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"BlockedDate\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bookingId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"booking\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"BlockedDateToBooking\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

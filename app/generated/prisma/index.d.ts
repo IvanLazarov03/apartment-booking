@@ -2091,6 +2091,7 @@ export namespace Prisma {
     specialRequests: string | null
     status: string | null
     confirmationToken: string | null
+    tokenExpiresAt: Date | null
     confirmedAt: Date | null
     createdAt: Date | null
   }
@@ -2105,6 +2106,7 @@ export namespace Prisma {
     specialRequests: string | null
     status: string | null
     confirmationToken: string | null
+    tokenExpiresAt: Date | null
     confirmedAt: Date | null
     createdAt: Date | null
   }
@@ -2119,6 +2121,7 @@ export namespace Prisma {
     specialRequests: number
     status: number
     confirmationToken: number
+    tokenExpiresAt: number
     confirmedAt: number
     createdAt: number
     _all: number
@@ -2145,6 +2148,7 @@ export namespace Prisma {
     specialRequests?: true
     status?: true
     confirmationToken?: true
+    tokenExpiresAt?: true
     confirmedAt?: true
     createdAt?: true
   }
@@ -2159,6 +2163,7 @@ export namespace Prisma {
     specialRequests?: true
     status?: true
     confirmationToken?: true
+    tokenExpiresAt?: true
     confirmedAt?: true
     createdAt?: true
   }
@@ -2173,6 +2178,7 @@ export namespace Prisma {
     specialRequests?: true
     status?: true
     confirmationToken?: true
+    tokenExpiresAt?: true
     confirmedAt?: true
     createdAt?: true
     _all?: true
@@ -2274,6 +2280,7 @@ export namespace Prisma {
     specialRequests: string | null
     status: string
     confirmationToken: string | null
+    tokenExpiresAt: Date | null
     confirmedAt: Date | null
     createdAt: Date
     _count: BookingCountAggregateOutputType | null
@@ -2307,8 +2314,10 @@ export namespace Prisma {
     specialRequests?: boolean
     status?: boolean
     confirmationToken?: boolean
+    tokenExpiresAt?: boolean
     confirmedAt?: boolean
     createdAt?: boolean
+    blockedDate?: boolean | Booking$blockedDateArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2321,6 +2330,7 @@ export namespace Prisma {
     specialRequests?: boolean
     status?: boolean
     confirmationToken?: boolean
+    tokenExpiresAt?: boolean
     confirmedAt?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["booking"]>
@@ -2335,6 +2345,7 @@ export namespace Prisma {
     specialRequests?: boolean
     status?: boolean
     confirmationToken?: boolean
+    tokenExpiresAt?: boolean
     confirmedAt?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["booking"]>
@@ -2349,15 +2360,23 @@ export namespace Prisma {
     specialRequests?: boolean
     status?: boolean
     confirmationToken?: boolean
+    tokenExpiresAt?: boolean
     confirmedAt?: boolean
     createdAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "guestName" | "guestEmail" | "checkIn" | "checkOut" | "guestsCount" | "specialRequests" | "status" | "confirmationToken" | "confirmedAt" | "createdAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "guestName" | "guestEmail" | "checkIn" | "checkOut" | "guestsCount" | "specialRequests" | "status" | "confirmationToken" | "tokenExpiresAt" | "confirmedAt" | "createdAt", ExtArgs["result"]["booking"]>
+  export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    blockedDate?: boolean | Booking$blockedDateArgs<ExtArgs>
+  }
+  export type BookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type BookingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Booking"
-    objects: {}
+    objects: {
+      blockedDate: Prisma.$BlockedDatePayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       guestName: string
@@ -2368,6 +2387,7 @@ export namespace Prisma {
       specialRequests: string | null
       status: string
       confirmationToken: string | null
+      tokenExpiresAt: Date | null
       confirmedAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["booking"]>
@@ -2764,6 +2784,7 @@ export namespace Prisma {
    */
   export interface Prisma__BookingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    blockedDate<T extends Booking$blockedDateArgs<ExtArgs> = {}>(args?: Subset<T, Booking$blockedDateArgs<ExtArgs>>): Prisma__BlockedDateClient<$Result.GetResult<Prisma.$BlockedDatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2802,6 +2823,7 @@ export namespace Prisma {
     readonly specialRequests: FieldRef<"Booking", 'String'>
     readonly status: FieldRef<"Booking", 'String'>
     readonly confirmationToken: FieldRef<"Booking", 'String'>
+    readonly tokenExpiresAt: FieldRef<"Booking", 'DateTime'>
     readonly confirmedAt: FieldRef<"Booking", 'DateTime'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
   }
@@ -2821,6 +2843,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * Filter, which Booking to fetch.
      */
     where: BookingWhereUniqueInput
@@ -2839,6 +2865,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * Filter, which Booking to fetch.
      */
     where: BookingWhereUniqueInput
@@ -2856,6 +2886,10 @@ export namespace Prisma {
      * Omit specific fields from the Booking
      */
     omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
     /**
      * Filter, which Booking to fetch.
      */
@@ -2905,6 +2939,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * Filter, which Booking to fetch.
      */
     where?: BookingWhereInput
@@ -2953,6 +2991,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * Filter, which Bookings to fetch.
      */
     where?: BookingWhereInput
@@ -2995,6 +3037,10 @@ export namespace Prisma {
      * Omit specific fields from the Booking
      */
     omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
     /**
      * The data needed to create a Booking.
      */
@@ -3043,6 +3089,10 @@ export namespace Prisma {
      * Omit specific fields from the Booking
      */
     omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
     /**
      * The data needed to update a Booking.
      */
@@ -3110,6 +3160,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * The filter to search for the Booking to update in case it exists.
      */
     where: BookingWhereUniqueInput
@@ -3136,6 +3190,10 @@ export namespace Prisma {
      */
     omit?: BookingOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
      * Filter which Booking to delete.
      */
     where: BookingWhereUniqueInput
@@ -3156,6 +3214,25 @@ export namespace Prisma {
   }
 
   /**
+   * Booking.blockedDate
+   */
+  export type Booking$blockedDateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedDate
+     */
+    select?: BlockedDateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BlockedDate
+     */
+    omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    where?: BlockedDateWhereInput
+  }
+
+  /**
    * Booking without action
    */
   export type BookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3167,6 +3244,10 @@ export namespace Prisma {
      * Omit specific fields from the Booking
      */
     omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
   }
 
 
@@ -3184,10 +3265,12 @@ export namespace Prisma {
 
   export type BlockedDateAvgAggregateOutputType = {
     id: number | null
+    bookingId: number | null
   }
 
   export type BlockedDateSumAggregateOutputType = {
     id: number | null
+    bookingId: number | null
   }
 
   export type BlockedDateMinAggregateOutputType = {
@@ -3195,6 +3278,7 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     reason: string | null
+    bookingId: number | null
     createdAt: Date | null
   }
 
@@ -3203,6 +3287,7 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     reason: string | null
+    bookingId: number | null
     createdAt: Date | null
   }
 
@@ -3211,6 +3296,7 @@ export namespace Prisma {
     startDate: number
     endDate: number
     reason: number
+    bookingId: number
     createdAt: number
     _all: number
   }
@@ -3218,10 +3304,12 @@ export namespace Prisma {
 
   export type BlockedDateAvgAggregateInputType = {
     id?: true
+    bookingId?: true
   }
 
   export type BlockedDateSumAggregateInputType = {
     id?: true
+    bookingId?: true
   }
 
   export type BlockedDateMinAggregateInputType = {
@@ -3229,6 +3317,7 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     reason?: true
+    bookingId?: true
     createdAt?: true
   }
 
@@ -3237,6 +3326,7 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     reason?: true
+    bookingId?: true
     createdAt?: true
   }
 
@@ -3245,6 +3335,7 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     reason?: true
+    bookingId?: true
     createdAt?: true
     _all?: true
   }
@@ -3340,6 +3431,7 @@ export namespace Prisma {
     startDate: Date
     endDate: Date
     reason: string | null
+    bookingId: number | null
     createdAt: Date
     _count: BlockedDateCountAggregateOutputType | null
     _avg: BlockedDateAvgAggregateOutputType | null
@@ -3367,7 +3459,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     reason?: boolean
+    bookingId?: boolean
     createdAt?: boolean
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
   }, ExtArgs["result"]["blockedDate"]>
 
   export type BlockedDateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3375,7 +3469,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     reason?: boolean
+    bookingId?: boolean
     createdAt?: boolean
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
   }, ExtArgs["result"]["blockedDate"]>
 
   export type BlockedDateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3383,7 +3479,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     reason?: boolean
+    bookingId?: boolean
     createdAt?: boolean
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
   }, ExtArgs["result"]["blockedDate"]>
 
   export type BlockedDateSelectScalar = {
@@ -3391,19 +3489,32 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     reason?: boolean
+    bookingId?: boolean
     createdAt?: boolean
   }
 
-  export type BlockedDateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "reason" | "createdAt", ExtArgs["result"]["blockedDate"]>
+  export type BlockedDateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "reason" | "bookingId" | "createdAt", ExtArgs["result"]["blockedDate"]>
+  export type BlockedDateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
+  }
+  export type BlockedDateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
+  }
+  export type BlockedDateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BlockedDate$bookingArgs<ExtArgs>
+  }
 
   export type $BlockedDatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "BlockedDate"
-    objects: {}
+    objects: {
+      booking: Prisma.$BookingPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       startDate: Date
       endDate: Date
       reason: string | null
+      bookingId: number | null
       createdAt: Date
     }, ExtArgs["result"]["blockedDate"]>
     composites: {}
@@ -3799,6 +3910,7 @@ export namespace Prisma {
    */
   export interface Prisma__BlockedDateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking<T extends BlockedDate$bookingArgs<ExtArgs> = {}>(args?: Subset<T, BlockedDate$bookingArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3832,6 +3944,7 @@ export namespace Prisma {
     readonly startDate: FieldRef<"BlockedDate", 'DateTime'>
     readonly endDate: FieldRef<"BlockedDate", 'DateTime'>
     readonly reason: FieldRef<"BlockedDate", 'String'>
+    readonly bookingId: FieldRef<"BlockedDate", 'Int'>
     readonly createdAt: FieldRef<"BlockedDate", 'DateTime'>
   }
     
@@ -3849,6 +3962,10 @@ export namespace Prisma {
      * Omit specific fields from the BlockedDate
      */
     omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
     /**
      * Filter, which BlockedDate to fetch.
      */
@@ -3868,6 +3985,10 @@ export namespace Prisma {
      */
     omit?: BlockedDateOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    /**
      * Filter, which BlockedDate to fetch.
      */
     where: BlockedDateWhereUniqueInput
@@ -3885,6 +4006,10 @@ export namespace Prisma {
      * Omit specific fields from the BlockedDate
      */
     omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
     /**
      * Filter, which BlockedDate to fetch.
      */
@@ -3934,6 +4059,10 @@ export namespace Prisma {
      */
     omit?: BlockedDateOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    /**
      * Filter, which BlockedDate to fetch.
      */
     where?: BlockedDateWhereInput
@@ -3982,6 +4111,10 @@ export namespace Prisma {
      */
     omit?: BlockedDateOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    /**
      * Filter, which BlockedDates to fetch.
      */
     where?: BlockedDateWhereInput
@@ -4025,6 +4158,10 @@ export namespace Prisma {
      */
     omit?: BlockedDateOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    /**
      * The data needed to create a BlockedDate.
      */
     data: XOR<BlockedDateCreateInput, BlockedDateUncheckedCreateInput>
@@ -4058,6 +4195,10 @@ export namespace Prisma {
      */
     data: BlockedDateCreateManyInput | BlockedDateCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4072,6 +4213,10 @@ export namespace Prisma {
      * Omit specific fields from the BlockedDate
      */
     omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
     /**
      * The data needed to update a BlockedDate.
      */
@@ -4124,6 +4269,10 @@ export namespace Prisma {
      * Limit how many BlockedDates to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4138,6 +4287,10 @@ export namespace Prisma {
      * Omit specific fields from the BlockedDate
      */
     omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
     /**
      * The filter to search for the BlockedDate to update in case it exists.
      */
@@ -4165,6 +4318,10 @@ export namespace Prisma {
      */
     omit?: BlockedDateOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
+    /**
      * Filter which BlockedDate to delete.
      */
     where: BlockedDateWhereUniqueInput
@@ -4185,6 +4342,25 @@ export namespace Prisma {
   }
 
   /**
+   * BlockedDate.booking
+   */
+  export type BlockedDate$bookingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    where?: BookingWhereInput
+  }
+
+  /**
    * BlockedDate without action
    */
   export type BlockedDateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4196,6 +4372,10 @@ export namespace Prisma {
      * Omit specific fields from the BlockedDate
      */
     omit?: BlockedDateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BlockedDateInclude<ExtArgs> | null
   }
 
 
@@ -4233,6 +4413,7 @@ export namespace Prisma {
     specialRequests: 'specialRequests',
     status: 'status',
     confirmationToken: 'confirmationToken',
+    tokenExpiresAt: 'tokenExpiresAt',
     confirmedAt: 'confirmedAt',
     createdAt: 'createdAt'
   };
@@ -4245,6 +4426,7 @@ export namespace Prisma {
     startDate: 'startDate',
     endDate: 'endDate',
     reason: 'reason',
+    bookingId: 'bookingId',
     createdAt: 'createdAt'
   };
 
@@ -4401,8 +4583,10 @@ export namespace Prisma {
     specialRequests?: StringNullableFilter<"Booking"> | string | null
     status?: StringFilter<"Booking"> | string
     confirmationToken?: StringNullableFilter<"Booking"> | string | null
+    tokenExpiresAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     confirmedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
+    blockedDate?: XOR<BlockedDateNullableScalarRelationFilter, BlockedDateWhereInput> | null
   }
 
   export type BookingOrderByWithRelationInput = {
@@ -4415,8 +4599,10 @@ export namespace Prisma {
     specialRequests?: SortOrderInput | SortOrder
     status?: SortOrder
     confirmationToken?: SortOrderInput | SortOrder
+    tokenExpiresAt?: SortOrderInput | SortOrder
     confirmedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    blockedDate?: BlockedDateOrderByWithRelationInput
   }
 
   export type BookingWhereUniqueInput = Prisma.AtLeast<{
@@ -4432,8 +4618,10 @@ export namespace Prisma {
     guestsCount?: IntFilter<"Booking"> | number
     specialRequests?: StringNullableFilter<"Booking"> | string | null
     status?: StringFilter<"Booking"> | string
+    tokenExpiresAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     confirmedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
+    blockedDate?: XOR<BlockedDateNullableScalarRelationFilter, BlockedDateWhereInput> | null
   }, "id" | "confirmationToken">
 
   export type BookingOrderByWithAggregationInput = {
@@ -4446,6 +4634,7 @@ export namespace Prisma {
     specialRequests?: SortOrderInput | SortOrder
     status?: SortOrder
     confirmationToken?: SortOrderInput | SortOrder
+    tokenExpiresAt?: SortOrderInput | SortOrder
     confirmedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
@@ -4468,6 +4657,7 @@ export namespace Prisma {
     specialRequests?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     status?: StringWithAggregatesFilter<"Booking"> | string
     confirmationToken?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    tokenExpiresAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     confirmedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
@@ -4480,7 +4670,9 @@ export namespace Prisma {
     startDate?: DateTimeFilter<"BlockedDate"> | Date | string
     endDate?: DateTimeFilter<"BlockedDate"> | Date | string
     reason?: StringNullableFilter<"BlockedDate"> | string | null
+    bookingId?: IntNullableFilter<"BlockedDate"> | number | null
     createdAt?: DateTimeFilter<"BlockedDate"> | Date | string
+    booking?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
   }
 
   export type BlockedDateOrderByWithRelationInput = {
@@ -4488,11 +4680,14 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     reason?: SortOrderInput | SortOrder
+    bookingId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    booking?: BookingOrderByWithRelationInput
   }
 
   export type BlockedDateWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    bookingId?: number
     AND?: BlockedDateWhereInput | BlockedDateWhereInput[]
     OR?: BlockedDateWhereInput[]
     NOT?: BlockedDateWhereInput | BlockedDateWhereInput[]
@@ -4500,13 +4695,15 @@ export namespace Prisma {
     endDate?: DateTimeFilter<"BlockedDate"> | Date | string
     reason?: StringNullableFilter<"BlockedDate"> | string | null
     createdAt?: DateTimeFilter<"BlockedDate"> | Date | string
-  }, "id">
+    booking?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
+  }, "id" | "bookingId">
 
   export type BlockedDateOrderByWithAggregationInput = {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     reason?: SortOrderInput | SortOrder
+    bookingId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: BlockedDateCountOrderByAggregateInput
     _avg?: BlockedDateAvgOrderByAggregateInput
@@ -4523,6 +4720,7 @@ export namespace Prisma {
     startDate?: DateTimeWithAggregatesFilter<"BlockedDate"> | Date | string
     endDate?: DateTimeWithAggregatesFilter<"BlockedDate"> | Date | string
     reason?: StringNullableWithAggregatesFilter<"BlockedDate"> | string | null
+    bookingId?: IntNullableWithAggregatesFilter<"BlockedDate"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"BlockedDate"> | Date | string
   }
 
@@ -4581,8 +4779,10 @@ export namespace Prisma {
     specialRequests?: string | null
     status?: string
     confirmationToken?: string | null
+    tokenExpiresAt?: Date | string | null
     confirmedAt?: Date | string | null
     createdAt?: Date | string
+    blockedDate?: BlockedDateCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateInput = {
@@ -4595,8 +4795,10 @@ export namespace Prisma {
     specialRequests?: string | null
     status?: string
     confirmationToken?: string | null
+    tokenExpiresAt?: Date | string | null
     confirmedAt?: Date | string | null
     createdAt?: Date | string
+    blockedDate?: BlockedDateUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUpdateInput = {
@@ -4608,8 +4810,10 @@ export namespace Prisma {
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    blockedDate?: BlockedDateUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateInput = {
@@ -4622,8 +4826,10 @@ export namespace Prisma {
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    blockedDate?: BlockedDateUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingCreateManyInput = {
@@ -4636,6 +4842,7 @@ export namespace Prisma {
     specialRequests?: string | null
     status?: string
     confirmationToken?: string | null
+    tokenExpiresAt?: Date | string | null
     confirmedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -4649,6 +4856,7 @@ export namespace Prisma {
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4663,6 +4871,7 @@ export namespace Prisma {
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4672,6 +4881,7 @@ export namespace Prisma {
     endDate: Date | string
     reason?: string | null
     createdAt?: Date | string
+    booking?: BookingCreateNestedOneWithoutBlockedDateInput
   }
 
   export type BlockedDateUncheckedCreateInput = {
@@ -4679,6 +4889,7 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     reason?: string | null
+    bookingId?: number | null
     createdAt?: Date | string
   }
 
@@ -4687,6 +4898,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneWithoutBlockedDateNestedInput
   }
 
   export type BlockedDateUncheckedUpdateInput = {
@@ -4694,6 +4906,7 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
+    bookingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4702,6 +4915,7 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     reason?: string | null
+    bookingId?: number | null
     createdAt?: Date | string
   }
 
@@ -4717,6 +4931,7 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
+    bookingId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4860,6 +5075,11 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type BlockedDateNullableScalarRelationFilter = {
+    is?: BlockedDateWhereInput | null
+    isNot?: BlockedDateWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -4875,6 +5095,7 @@ export namespace Prisma {
     specialRequests?: SortOrder
     status?: SortOrder
     confirmationToken?: SortOrder
+    tokenExpiresAt?: SortOrder
     confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -4894,6 +5115,7 @@ export namespace Prisma {
     specialRequests?: SortOrder
     status?: SortOrder
     confirmationToken?: SortOrder
+    tokenExpiresAt?: SortOrder
     confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -4908,6 +5130,7 @@ export namespace Prisma {
     specialRequests?: SortOrder
     status?: SortOrder
     confirmationToken?: SortOrder
+    tokenExpiresAt?: SortOrder
     confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -4949,16 +5172,34 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type BookingNullableScalarRelationFilter = {
+    is?: BookingWhereInput | null
+    isNot?: BookingWhereInput | null
+  }
+
   export type BlockedDateCountOrderByAggregateInput = {
     id?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     reason?: SortOrder
+    bookingId?: SortOrder
     createdAt?: SortOrder
   }
 
   export type BlockedDateAvgOrderByAggregateInput = {
     id?: SortOrder
+    bookingId?: SortOrder
   }
 
   export type BlockedDateMaxOrderByAggregateInput = {
@@ -4966,6 +5207,7 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     reason?: SortOrder
+    bookingId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4974,11 +5216,29 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     reason?: SortOrder
+    bookingId?: SortOrder
     createdAt?: SortOrder
   }
 
   export type BlockedDateSumOrderByAggregateInput = {
     id?: SortOrder
+    bookingId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -4997,12 +5257,68 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BlockedDateCreateNestedOneWithoutBookingInput = {
+    create?: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: BlockedDateCreateOrConnectWithoutBookingInput
+    connect?: BlockedDateWhereUniqueInput
+  }
+
+  export type BlockedDateUncheckedCreateNestedOneWithoutBookingInput = {
+    create?: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: BlockedDateCreateOrConnectWithoutBookingInput
+    connect?: BlockedDateWhereUniqueInput
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type BlockedDateUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: BlockedDateCreateOrConnectWithoutBookingInput
+    upsert?: BlockedDateUpsertWithoutBookingInput
+    disconnect?: BlockedDateWhereInput | boolean
+    delete?: BlockedDateWhereInput | boolean
+    connect?: BlockedDateWhereUniqueInput
+    update?: XOR<XOR<BlockedDateUpdateToOneWithWhereWithoutBookingInput, BlockedDateUpdateWithoutBookingInput>, BlockedDateUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type BlockedDateUncheckedUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: BlockedDateCreateOrConnectWithoutBookingInput
+    upsert?: BlockedDateUpsertWithoutBookingInput
+    disconnect?: BlockedDateWhereInput | boolean
+    delete?: BlockedDateWhereInput | boolean
+    connect?: BlockedDateWhereUniqueInput
+    update?: XOR<XOR<BlockedDateUpdateToOneWithWhereWithoutBookingInput, BlockedDateUpdateWithoutBookingInput>, BlockedDateUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type BookingCreateNestedOneWithoutBlockedDateInput = {
+    create?: XOR<BookingCreateWithoutBlockedDateInput, BookingUncheckedCreateWithoutBlockedDateInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBlockedDateInput
+    connect?: BookingWhereUniqueInput
+  }
+
+  export type BookingUpdateOneWithoutBlockedDateNestedInput = {
+    create?: XOR<BookingCreateWithoutBlockedDateInput, BookingUncheckedCreateWithoutBlockedDateInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBlockedDateInput
+    upsert?: BookingUpsertWithoutBlockedDateInput
+    disconnect?: BookingWhereInput | boolean
+    delete?: BookingWhereInput | boolean
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutBlockedDateInput, BookingUpdateWithoutBlockedDateInput>, BookingUncheckedUpdateWithoutBlockedDateInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5164,6 +5480,153 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type BlockedDateCreateWithoutBookingInput = {
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type BlockedDateUncheckedCreateWithoutBookingInput = {
+    id?: number
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type BlockedDateCreateOrConnectWithoutBookingInput = {
+    where: BlockedDateWhereUniqueInput
+    create: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+  }
+
+  export type BlockedDateUpsertWithoutBookingInput = {
+    update: XOR<BlockedDateUpdateWithoutBookingInput, BlockedDateUncheckedUpdateWithoutBookingInput>
+    create: XOR<BlockedDateCreateWithoutBookingInput, BlockedDateUncheckedCreateWithoutBookingInput>
+    where?: BlockedDateWhereInput
+  }
+
+  export type BlockedDateUpdateToOneWithWhereWithoutBookingInput = {
+    where?: BlockedDateWhereInput
+    data: XOR<BlockedDateUpdateWithoutBookingInput, BlockedDateUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type BlockedDateUpdateWithoutBookingInput = {
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BlockedDateUncheckedUpdateWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingCreateWithoutBlockedDateInput = {
+    guestName: string
+    guestEmail: string
+    checkIn: Date | string
+    checkOut: Date | string
+    guestsCount: number
+    specialRequests?: string | null
+    status?: string
+    confirmationToken?: string | null
+    tokenExpiresAt?: Date | string | null
+    confirmedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type BookingUncheckedCreateWithoutBlockedDateInput = {
+    id?: number
+    guestName: string
+    guestEmail: string
+    checkIn: Date | string
+    checkOut: Date | string
+    guestsCount: number
+    specialRequests?: string | null
+    status?: string
+    confirmationToken?: string | null
+    tokenExpiresAt?: Date | string | null
+    confirmedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type BookingCreateOrConnectWithoutBlockedDateInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutBlockedDateInput, BookingUncheckedCreateWithoutBlockedDateInput>
+  }
+
+  export type BookingUpsertWithoutBlockedDateInput = {
+    update: XOR<BookingUpdateWithoutBlockedDateInput, BookingUncheckedUpdateWithoutBlockedDateInput>
+    create: XOR<BookingCreateWithoutBlockedDateInput, BookingUncheckedCreateWithoutBlockedDateInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutBlockedDateInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutBlockedDateInput, BookingUncheckedUpdateWithoutBlockedDateInput>
+  }
+
+  export type BookingUpdateWithoutBlockedDateInput = {
+    guestName?: StringFieldUpdateOperationsInput | string
+    guestEmail?: StringFieldUpdateOperationsInput | string
+    checkIn?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOut?: DateTimeFieldUpdateOperationsInput | Date | string
+    guestsCount?: IntFieldUpdateOperationsInput | number
+    specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingUncheckedUpdateWithoutBlockedDateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    guestName?: StringFieldUpdateOperationsInput | string
+    guestEmail?: StringFieldUpdateOperationsInput | string
+    checkIn?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOut?: DateTimeFieldUpdateOperationsInput | Date | string
+    guestsCount?: IntFieldUpdateOperationsInput | number
+    specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
