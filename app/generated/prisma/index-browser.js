@@ -137,6 +137,8 @@ exports.Prisma.BookingScalarFieldEnum = {
   guestsCount: 'guestsCount',
   specialRequests: 'specialRequests',
   status: 'status',
+  confirmationToken: 'confirmationToken',
+  confirmedAt: 'confirmedAt',
   createdAt: 'createdAt'
 };
 

@@ -2090,6 +2090,8 @@ export namespace Prisma {
     guestsCount: number | null
     specialRequests: string | null
     status: string | null
+    confirmationToken: string | null
+    confirmedAt: Date | null
     createdAt: Date | null
   }
 
@@ -2102,6 +2104,8 @@ export namespace Prisma {
     guestsCount: number | null
     specialRequests: string | null
     status: string | null
+    confirmationToken: string | null
+    confirmedAt: Date | null
     createdAt: Date | null
   }
 
@@ -2114,6 +2118,8 @@ export namespace Prisma {
     guestsCount: number
     specialRequests: number
     status: number
+    confirmationToken: number
+    confirmedAt: number
     createdAt: number
     _all: number
   }
@@ -2138,6 +2144,8 @@ export namespace Prisma {
     guestsCount?: true
     specialRequests?: true
     status?: true
+    confirmationToken?: true
+    confirmedAt?: true
     createdAt?: true
   }
 
@@ -2150,6 +2158,8 @@ export namespace Prisma {
     guestsCount?: true
     specialRequests?: true
     status?: true
+    confirmationToken?: true
+    confirmedAt?: true
     createdAt?: true
   }
 
@@ -2162,6 +2172,8 @@ export namespace Prisma {
     guestsCount?: true
     specialRequests?: true
     status?: true
+    confirmationToken?: true
+    confirmedAt?: true
     createdAt?: true
     _all?: true
   }
@@ -2261,6 +2273,8 @@ export namespace Prisma {
     guestsCount: number
     specialRequests: string | null
     status: string
+    confirmationToken: string | null
+    confirmedAt: Date | null
     createdAt: Date
     _count: BookingCountAggregateOutputType | null
     _avg: BookingAvgAggregateOutputType | null
@@ -2292,6 +2306,8 @@ export namespace Prisma {
     guestsCount?: boolean
     specialRequests?: boolean
     status?: boolean
+    confirmationToken?: boolean
+    confirmedAt?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["booking"]>
 
@@ -2304,6 +2320,8 @@ export namespace Prisma {
     guestsCount?: boolean
     specialRequests?: boolean
     status?: boolean
+    confirmationToken?: boolean
+    confirmedAt?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["booking"]>
 
@@ -2316,6 +2334,8 @@ export namespace Prisma {
     guestsCount?: boolean
     specialRequests?: boolean
     status?: boolean
+    confirmationToken?: boolean
+    confirmedAt?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["booking"]>
 
@@ -2328,10 +2348,12 @@ export namespace Prisma {
     guestsCount?: boolean
     specialRequests?: boolean
     status?: boolean
+    confirmationToken?: boolean
+    confirmedAt?: boolean
     createdAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "guestName" | "guestEmail" | "checkIn" | "checkOut" | "guestsCount" | "specialRequests" | "status" | "createdAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "guestName" | "guestEmail" | "checkIn" | "checkOut" | "guestsCount" | "specialRequests" | "status" | "confirmationToken" | "confirmedAt" | "createdAt", ExtArgs["result"]["booking"]>
 
   export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Booking"
@@ -2345,6 +2367,8 @@ export namespace Prisma {
       guestsCount: number
       specialRequests: string | null
       status: string
+      confirmationToken: string | null
+      confirmedAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["booking"]>
     composites: {}
@@ -2777,6 +2801,8 @@ export namespace Prisma {
     readonly guestsCount: FieldRef<"Booking", 'Int'>
     readonly specialRequests: FieldRef<"Booking", 'String'>
     readonly status: FieldRef<"Booking", 'String'>
+    readonly confirmationToken: FieldRef<"Booking", 'String'>
+    readonly confirmedAt: FieldRef<"Booking", 'DateTime'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
   }
     
@@ -4206,6 +4232,8 @@ export namespace Prisma {
     guestsCount: 'guestsCount',
     specialRequests: 'specialRequests',
     status: 'status',
+    confirmationToken: 'confirmationToken',
+    confirmedAt: 'confirmedAt',
     createdAt: 'createdAt'
   };
 
@@ -4372,6 +4400,8 @@ export namespace Prisma {
     guestsCount?: IntFilter<"Booking"> | number
     specialRequests?: StringNullableFilter<"Booking"> | string | null
     status?: StringFilter<"Booking"> | string
+    confirmationToken?: StringNullableFilter<"Booking"> | string | null
+    confirmedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
   }
 
@@ -4384,11 +4414,14 @@ export namespace Prisma {
     guestsCount?: SortOrder
     specialRequests?: SortOrderInput | SortOrder
     status?: SortOrder
+    confirmationToken?: SortOrderInput | SortOrder
+    confirmedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
   }
 
   export type BookingWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    confirmationToken?: string
     AND?: BookingWhereInput | BookingWhereInput[]
     OR?: BookingWhereInput[]
     NOT?: BookingWhereInput | BookingWhereInput[]
@@ -4399,8 +4432,9 @@ export namespace Prisma {
     guestsCount?: IntFilter<"Booking"> | number
     specialRequests?: StringNullableFilter<"Booking"> | string | null
     status?: StringFilter<"Booking"> | string
+    confirmedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
-  }, "id">
+  }, "id" | "confirmationToken">
 
   export type BookingOrderByWithAggregationInput = {
     id?: SortOrder
@@ -4411,6 +4445,8 @@ export namespace Prisma {
     guestsCount?: SortOrder
     specialRequests?: SortOrderInput | SortOrder
     status?: SortOrder
+    confirmationToken?: SortOrderInput | SortOrder
+    confirmedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
     _avg?: BookingAvgOrderByAggregateInput
@@ -4431,6 +4467,8 @@ export namespace Prisma {
     guestsCount?: IntWithAggregatesFilter<"Booking"> | number
     specialRequests?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     status?: StringWithAggregatesFilter<"Booking"> | string
+    confirmationToken?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    confirmedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
 
@@ -4542,6 +4580,8 @@ export namespace Prisma {
     guestsCount: number
     specialRequests?: string | null
     status?: string
+    confirmationToken?: string | null
+    confirmedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -4554,6 +4594,8 @@ export namespace Prisma {
     guestsCount: number
     specialRequests?: string | null
     status?: string
+    confirmationToken?: string | null
+    confirmedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -4565,6 +4607,8 @@ export namespace Prisma {
     guestsCount?: IntFieldUpdateOperationsInput | number
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4577,6 +4621,8 @@ export namespace Prisma {
     guestsCount?: IntFieldUpdateOperationsInput | number
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4589,6 +4635,8 @@ export namespace Prisma {
     guestsCount: number
     specialRequests?: string | null
     status?: string
+    confirmationToken?: string | null
+    confirmedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -4600,6 +4648,8 @@ export namespace Prisma {
     guestsCount?: IntFieldUpdateOperationsInput | number
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4612,6 +4662,8 @@ export namespace Prisma {
     guestsCount?: IntFieldUpdateOperationsInput | number
     specialRequests?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    confirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4797,6 +4849,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -4811,6 +4874,8 @@ export namespace Prisma {
     guestsCount?: SortOrder
     specialRequests?: SortOrder
     status?: SortOrder
+    confirmationToken?: SortOrder
+    confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4828,6 +4893,8 @@ export namespace Prisma {
     guestsCount?: SortOrder
     specialRequests?: SortOrder
     status?: SortOrder
+    confirmationToken?: SortOrder
+    confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4840,6 +4907,8 @@ export namespace Prisma {
     guestsCount?: SortOrder
     specialRequests?: SortOrder
     status?: SortOrder
+    confirmationToken?: SortOrder
+    confirmedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4864,6 +4933,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type BlockedDateCountOrderByAggregateInput = {
@@ -4916,6 +4999,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5026,6 +5113,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -5052,6 +5150,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
 

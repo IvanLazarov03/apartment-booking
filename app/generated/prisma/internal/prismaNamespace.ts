@@ -692,6 +692,8 @@ export const BookingScalarFieldEnum = {
   guestsCount: 'guestsCount',
   specialRequests: 'specialRequests',
   status: 'status',
+  confirmationToken: 'confirmationToken',
+  confirmedAt: 'confirmedAt',
   createdAt: 'createdAt'
 } as const
 

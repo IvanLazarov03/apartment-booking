@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
@@ -22,21 +22,25 @@ model Admin {
 }
 
 model Booking {
-  id               Int      @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
 
-  guestName        String
-  guestEmail       String
+  guestName          String
+  guestEmail         String
 
-  checkIn          DateTime
-  checkOut         DateTime
+  checkIn            DateTime
+  checkOut           DateTime
 
-  guestsCount      Int
+  guestsCount        Int
 
-  specialRequests  String?
+  specialRequests    String?
 
-  status           String   @default("pending")
+  status             String    @default("pending")
 
-  createdAt        DateTime @default(now())
+  confirmationToken  String?   @unique
+
+  confirmedAt        DateTime?
+
+  createdAt          DateTime  @default(now())
 }
 
 model BlockedDate {

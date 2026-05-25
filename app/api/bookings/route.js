@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { transporter } from "@/lib/mail";
+import crypto from "crypto";
 
 export async function POST(req) {
   try {
@@ -16,12 +17,10 @@ export async function POST(req) {
       specialRequest,
     } = body;
 
-    // Check overlapping bookings
+    // Check overlapping CONFIRMED bookings only
     const existingBooking = await prisma.booking.findFirst({
       where: {
-        status: {
-          not: "cancelled",
-        },
+        status: "confirmed",
 
         NOT: [
           {
@@ -50,6 +49,9 @@ export async function POST(req) {
       );
     }
 
+    // Generate confirmation token
+    const token = crypto.randomBytes(32).toString("hex");
+
     // Create booking
     const booking = await prisma.booking.create({
       data: {
@@ -64,8 +66,13 @@ export async function POST(req) {
         specialRequests: specialRequest,
 
         status: "pending",
+
+        confirmationToken: token,
       },
     });
+
+    // Confirmation URL
+    const confirmUrl = `http://localhost:3000/api/bookings/confirm?token=${token}`;
 
     // Send confirmation email
     await transporter.sendMail({
@@ -73,28 +80,78 @@ export async function POST(req) {
 
       to: email,
 
-      subject: "Booking Request Received",
+      subject: "Confirm Your Booking",
 
       html: `
-        <div style="font-family: Arial; padding: 20px;">
-          <h1>Booking Request Received</h1>
+        <div style="
+          font-family: Arial;
+          padding: 24px;
+          max-width: 600px;
+          margin: auto;
+          background: #ffffff;
+          border: 1px solid #e5e5e5;
+          border-radius: 12px;
+        ">
+          <h1 style="
+            font-size: 28px;
+            margin-bottom: 16px;
+            color: #1a1a18;
+          ">
+            Confirm Your Stay
+          </h1>
 
-          <p>Hello ${name},</p>
-
-          <p>
-            Thank you for your booking request.
+          <p style="font-size: 15px; color: #444;">
+            Hello ${name},
           </p>
 
-          <p>
-            <strong>Arrival:</strong> ${arrival}
+          <p style="font-size: 15px; color: #444; line-height: 1.7;">
+            Thank you for choosing Habitat.
+            Please confirm your booking by clicking the button below.
           </p>
 
-          <p>
-            <strong>Departure:</strong> ${departure}
-          </p>
+          <div style="margin: 32px 0;">
+            <a
+              href="${confirmUrl}"
+              style="
+                background: #2d4a3e;
+                color: white;
+                text-decoration: none;
+                padding: 14px 24px;
+                border-radius: 8px;
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 600;
+              "
+            >
+              Confirm Booking
+            </a>
+          </div>
 
-          <p>
-            We will confirm your reservation shortly.
+          <div style="
+            background: #f7f7f5;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 24px;
+          ">
+            <p style="margin: 0 0 8px 0;">
+              <strong>Arrival:</strong>
+              ${arrival}
+            </p>
+
+            <p style="margin: 0;">
+              <strong>Departure:</strong>
+              ${departure}
+            </p>
+          </div>
+
+          <p style="
+            margin-top: 32px;
+            font-size: 13px;
+            color: #777;
+            line-height: 1.6;
+          ">
+            Your reservation will only be confirmed
+            after clicking the confirmation link.
           </p>
         </div>
       `,
@@ -105,7 +162,7 @@ export async function POST(req) {
       booking,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {

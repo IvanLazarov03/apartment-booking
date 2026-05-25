@@ -36,6 +36,10 @@ model Booking {
 
   status String @default("pending")
 
+  confirmationToken String? @unique
+
+  confirmedAt DateTime?
+
   createdAt DateTime @default(now())
 }
 
