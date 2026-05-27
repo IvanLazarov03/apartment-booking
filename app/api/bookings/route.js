@@ -11,6 +11,8 @@ export async function GET() {
 
     return NextResponse.json(bookings);
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       { error: "Failed to fetch bookings" },
       { status: 500 },
@@ -32,27 +34,27 @@ export async function POST(req) {
       specialRequest,
     } = body;
 
-    // Check overlapping CONFIRMED bookings only
-    const existingBooking = await prisma.booking.findFirst({
-      where: {
-        status: "confirmed",
+    const arrivalDate = new Date(arrival);
+    const departureDate = new Date(departure);
 
+    if (arrivalDate >= departureDate) {
+      return NextResponse.json(
+        { error: "Departure must be after arrival" },
+        { status: 400 },
+      );
+    }
+
+    // Check all blocked periods, including confirmed bookings and manual admin blocks.
+    const unavailableDate = await prisma.blockedDate.findFirst({
+      where: {
         NOT: [
-          {
-            checkOut: {
-              lte: new Date(arrival),
-            },
-          },
-          {
-            checkIn: {
-              gte: new Date(departure),
-            },
-          },
+          { endDate: { lte: arrivalDate } },
+          { startDate: { gte: departureDate } },
         ],
       },
     });
 
-    if (existingBooking) {
+    if (unavailableDate) {
       return NextResponse.json(
         {
           error: "Selected dates are unavailable",
@@ -76,14 +78,14 @@ export async function POST(req) {
         guestEmail: email,
         guestName: name,
 
-        checkIn: new Date(arrival),
-        checkOut: new Date(departure),
+        checkIn: arrivalDate,
+        checkOut: departureDate,
 
         guestsCount: Number(adults) + Number(children),
 
         specialRequests: specialRequest,
 
-        status: "pending",
+        status: "PENDING",
 
         confirmationToken: token,
         tokenExpiresAt: tokenExpiresAt,
@@ -153,6 +155,81 @@ export async function POST(req) {
       success: true,
       booking,
     });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req) {
+  try {
+    const { id, status } = await req.json();
+    const bookingId = Number(id);
+    const nextStatus = String(status || "").toUpperCase();
+
+    if (!bookingId || !["PENDING", "CONFIRMED", "EXPIRED", "CANCELLED"].includes(nextStatus)) {
+      return NextResponse.json({ error: "Invalid booking update" }, { status: 400 });
+    }
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { blockedDate: true },
+    });
+
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    if (nextStatus === "CONFIRMED" && booking.status !== "CONFIRMED") {
+      const overlappingDate = await prisma.blockedDate.findFirst({
+        where: {
+          bookingId: { not: booking.id },
+          NOT: [
+            { endDate: { lte: booking.checkIn } },
+            { startDate: { gte: booking.checkOut } },
+          ],
+        },
+      });
+
+      if (overlappingDate) {
+        return NextResponse.json(
+          { error: "This booking overlaps with blocked dates" },
+          { status: 400 },
+        );
+      }
+    }
+
+    const updatedBooking = await prisma.booking.update({
+      where: { id: booking.id },
+      data: {
+        status: nextStatus,
+        confirmedAt: nextStatus === "CONFIRMED" ? (booking.confirmedAt || new Date()) : booking.confirmedAt,
+        confirmationToken: nextStatus === "CONFIRMED" ? null : booking.confirmationToken,
+        tokenExpiresAt: nextStatus === "CONFIRMED" ? null : booking.tokenExpiresAt,
+      },
+    });
+
+    if (nextStatus === "CONFIRMED" && !booking.blockedDate) {
+      await prisma.blockedDate.create({
+        data: {
+          startDate: booking.checkIn,
+          endDate: booking.checkOut,
+          reason: `Booking #${booking.id}`,
+          booking: {
+            connect: { id: booking.id },
+          },
+        },
+      });
+    }
+
+    if (nextStatus === "CANCELLED" && booking.blockedDate) {
+      await prisma.blockedDate.delete({
+        where: { id: booking.blockedDate.id },
+      });
+    }
+
+    return NextResponse.json(updatedBooking);
   } catch (error) {
     console.error(error);
 

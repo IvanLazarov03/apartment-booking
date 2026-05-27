@@ -49,7 +49,7 @@ export default function Calendar() {
       const start = new Date(booking.startDate);
       const end = new Date(booking.endDate);
 
-      return current >= start && current <= end;
+      return current >= start && current < end;
     });
   }
 
