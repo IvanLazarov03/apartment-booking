@@ -3,6 +3,21 @@ import { prisma } from "@/lib/prisma";
 import { transporter } from "@/lib/mail";
 import crypto from "crypto";
 
+export async function GET() {
+  try {
+    const bookings = await prisma.booking.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(bookings);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch bookings" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -53,7 +68,7 @@ export async function POST(req) {
 
     //EXPIRATION (30 minutes)
     const tokenExpiresAt = new Date();
-    tokenExpiresAt.setMinutes(tokenExpiresAt.getMinutes() + 1);
+    tokenExpiresAt.setMinutes(tokenExpiresAt.getMinutes() + 30);
 
     // Create booking
     const booking = await prisma.booking.create({
