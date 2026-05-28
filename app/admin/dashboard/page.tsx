@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { signOut } from "next-auth/react";
 
 type Booking = {
   id: number;
@@ -185,6 +186,17 @@ export default function AdminDashboard() {
           >
             Block Dates
           </Link>
+          {/* ✅ Logout button */}
+          <button
+            onClick={() => {
+              if (window.confirm("Are you sure you want to sign out?")) {
+                signOut({ callbackUrl: "/admin/login" });
+              }
+            }}
+            className="rounded-2xl border border-neutral-200 bg-red-500 px-4 py-2 text-sm text-white transition-all hover:bg-red-600 hover:text-red-100 hover:border-red-300 cursor-pointer"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
 

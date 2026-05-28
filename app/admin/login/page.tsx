@@ -3,38 +3,29 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
+import { Eye, EyeOff } from "lucide-react";
+
 export default function AdminLoginPage() {
   const router = useRouter();
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-
   const { status } = useSession();
+
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/admin/dashboard");
+      router.replace("/admin/dashboard");
     }
   }, [status, router]);
 
-  const [loading, setLoading] = useState(false);
-
-  const [error, setError] = useState("");
-
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setLoading(true);
     setError("");
 
@@ -44,14 +35,15 @@ export default function AdminLoginPage() {
       redirect: false,
     });
 
-    setLoading(false);
-
     if (result?.error) {
+      setLoading(false);
       setError("Invalid email or password");
       return;
     }
 
-    router.push("/admin/dashboard");
+    // Sync server session to client first — useEffect handles the redirect
+    // once status becomes "authenticated"
+    router.refresh();
   }
 
   const inputClass =
@@ -75,27 +67,28 @@ export default function AdminLoginPage() {
           <span className="text-xs uppercase tracking-[0.25em] text-neutral-400">
             Habitat Admin
           </span>
-
           <h1
             className="mt-3 text-5xl text-[#1a1a18] font-light"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-            }}
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             Welcome Back
           </h1>
-
           <p className="mt-3 text-sm text-neutral-500">
             Sign in to manage bookings and availability.
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+
+        <form
+          onSubmit={handleSubmit}
+          method="POST"
+          action="/api/auth/callback/credentials"
+          className="space-y-5"
+        >
           {/* Email */}
           <div>
             <label className="block text-sm text-neutral-600 mb-2">Email</label>
-
             <input
               type="email"
               name="email"
@@ -108,33 +101,31 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Password */}
-          <div>
+          <div className="relative">
             <label className="block text-sm text-neutral-600 mb-2">
               Password
             </label>
-
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className={inputClass}
+              className={inputClass + " pr-10"}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-3 top-7 flex items-center text-neutral-500"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </div>
 
           {/* Error */}
           {error && (
-            <div
-              className="
-                rounded-2xl
-                border border-red-200
-                bg-red-50
-                px-4 py-3
-                text-sm text-red-500
-              "
-            >
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-500">
               {error}
             </div>
           )}
