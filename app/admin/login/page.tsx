@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
-import { signIn } from "next-auth/react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
+import { SessionProvider } from "next-auth/react";
 export default function AdminLoginPage() {
   const router = useRouter();
 
@@ -11,6 +11,15 @@ export default function AdminLoginPage() {
     email: "",
     password: "",
   });
+
+
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/admin/dashboard");
+    }
+  }, [status, router]);
 
   const [loading, setLoading] = useState(false);
 
