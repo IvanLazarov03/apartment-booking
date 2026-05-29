@@ -211,12 +211,12 @@ export default function AdminDashboard() {
             {[
               [
                 "Estimated Revenue",
-                `$${stats.estimatedRevenue.toLocaleString()}`,
-                `$${NIGHTLY_RATE}/night`,
+                `€${stats.estimatedRevenue.toLocaleString()}`,
+                `€${NIGHTLY_RATE}/night`,
               ],
               [
                 "This Month",
-                `$${stats.monthlyRevenue.toLocaleString()}`,
+                `€${stats.monthlyRevenue.toLocaleString()}`,
                 "Confirmed stays",
               ],
               ["Occupancy", `${stats.occupancyRate}%`, "Next 30 days"],
