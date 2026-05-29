@@ -1,8 +1,11 @@
+import { TimerOff } from "lucide-react";
 export default function BookingExpiredPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafaf8] px-6">
       <div className="max-w-md w-full text-center bg-white border border-neutral-200 rounded-2xl p-10 shadow-sm">
-        <div className="text-5xl mb-4">⏳</div>
+        <div className="text-5xl mb-4 flex items-center justify-center">
+          <TimerOff color="black" />
+        </div>
 
         <h1 className="text-2xl font-light text-[#1a1a18]">
           Booking link expired
