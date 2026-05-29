@@ -51,8 +51,18 @@ export default function Footer() {
 
             <div className="text-sm text-neutral-600 flex flex-col gap-2">
               <p>Paralia, Greece</p>
-              <p>+30 70 000 000</p>
-              <p>hello@habitat.com</p>
+              <a
+                href="tel:+30700000000"
+                className="hover:text-neutral-900 transition"
+              >
+                +30 70 000 000
+              </a>
+              <a
+                href="mailto:habitat@gmail.com"
+                className="hover:text-neutral-900 transition"
+              >
+                habitat@gmail.com
+              </a>
             </div>
           </div>
         </div>

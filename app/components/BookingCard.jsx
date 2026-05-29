@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function BookingCard() {
   return (
     <div
@@ -14,7 +15,12 @@ export default function BookingCard() {
       </p>
 
       <button className="mt-6 w-full bg-[#2d4a3e] text-white py-3 rounded-lg hover:bg-[#1e3329] transition">
-        Book your stay
+        <Link
+          href="/book"
+          className="block w-full text-center font-medium text-sm tracking-wide"
+        >
+          Book now
+        </Link>
       </button>
 
       <p className="text-xs text-neutral-400 text-center mt-3">
