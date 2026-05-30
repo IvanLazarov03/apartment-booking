@@ -1,4 +1,4 @@
-export default function BookingConfirmedPage() {
+export default function BookingCancelledPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafaf8] px-4">
       <div className="w-full max-w-md">
@@ -6,12 +6,12 @@ export default function BookingConfirmedPage() {
         <div className="bg-white rounded-3xl border border-neutral-200 overflow-hidden">
           <div className="px-10 py-10 text-center">
             <h1 className="text-3xl font-semibold tracking-tight text-[#1a1a18]">
-              Booking Confirmed
+              Booking Cancelled
             </h1>
 
             <p className="mt-3 text-neutral-500 text-[15px] leading-relaxed">
-              Your reservation has been successfully confirmed. We look forward
-              to welcoming you.
+              Your reservation has been successfully cancelled. No charges have
+              been made.
             </p>
 
             {/* Divider */}
@@ -34,9 +34,8 @@ export default function BookingConfirmedPage() {
                 />
               </svg>
               <p className="text-[13px] text-neutral-500 leading-relaxed">
-                A confirmation email has been sent with your booking details.
-                Please check your inbox — if you don't see it, check your spam
-                folder.
+                Changed your mind? Your dates are now open again. We'd love to
+                have you — feel free to make a new booking anytime.
               </p>
             </div>
 
@@ -66,7 +65,7 @@ export default function BookingConfirmedPage() {
 
         {/* Footer note */}
         <p className="mt-6 text-center text-[12px] text-neutral-400">
-          Need to make changes? Contact us and we'll be happy to help.
+          A confirmation of your cancellation has been sent to your email.
         </p>
       </div>
     </div>

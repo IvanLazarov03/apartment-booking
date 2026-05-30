@@ -44,7 +44,6 @@ export async function POST(req) {
       );
     }
 
-    // Check all blocked periods, including confirmed bookings and manual admin blocks.
     const unavailableDate = await prisma.blockedDate.findFirst({
       where: {
         NOT: [
@@ -56,46 +55,33 @@ export async function POST(req) {
 
     if (unavailableDate) {
       return NextResponse.json(
-        {
-          error: "Selected dates are unavailable",
-        },
-        {
-          status: 400,
-        },
+        { error: "Selected dates are unavailable" },
+        { status: 400 },
       );
     }
 
-    // Generate confirmation token
     const token = crypto.randomBytes(32).toString("hex");
 
-    //EXPIRATION (30 minutes)
     const tokenExpiresAt = new Date();
     tokenExpiresAt.setMinutes(tokenExpiresAt.getMinutes() + 30);
 
-    // Create booking
     const booking = await prisma.booking.create({
       data: {
         guestEmail: email,
         guestName: name,
-
         checkIn: arrivalDate,
         checkOut: departureDate,
-
         guestsCount: Number(adults) + Number(children),
-
         specialRequests: specialRequest,
-
         status: "PENDING",
-
         confirmationToken: token,
         tokenExpiresAt: tokenExpiresAt,
       },
     });
 
-    // Confirmation URL
     const confirmUrl = `http://localhost:3000/api/bookings/confirm?token=${token}`;
+    const cancelUrl = `http://localhost:3000/api/bookings/cancel?token=${token}`;
 
-    // Send confirmation email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -137,6 +123,23 @@ export async function POST(req) {
               ">
               Confirm Booking
             </a>
+
+            <a href="${cancelUrl}"
+              style="
+                background: #ffffff;
+                color: #cc3333;
+                text-decoration: none;
+                padding: 14px 24px;
+                border-radius: 8px;
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 600;
+                border: 1.5px solid #cc3333;
+                margin-top: 12px;
+                margin-left: 16px;
+              ">
+              Cancel Booking
+            </a>
           </div>
 
           <div style="background: #f7f7f5; padding: 16px; border-radius: 10px;">
@@ -145,16 +148,13 @@ export async function POST(req) {
           </div>
 
           <p style="margin-top: 32px; font-size: 13px; color: #777;">
-            This link expires in 30 minutes.
+            Both links expire in 30 minutes.
           </p>
         </div>
       `,
     });
 
-    return NextResponse.json({
-      success: true,
-      booking,
-    });
+    return NextResponse.json({ success: true, booking });
   } catch (error) {
     console.error(error);
 
@@ -168,8 +168,14 @@ export async function PATCH(req) {
     const bookingId = Number(id);
     const nextStatus = String(status || "").toUpperCase();
 
-    if (!bookingId || !["PENDING", "CONFIRMED", "EXPIRED", "CANCELLED"].includes(nextStatus)) {
-      return NextResponse.json({ error: "Invalid booking update" }, { status: 400 });
+    if (
+      !bookingId ||
+      !["PENDING", "CONFIRMED", "EXPIRED", "CANCELLED"].includes(nextStatus)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid booking update" },
+        { status: 400 },
+      );
     }
 
     const booking = await prisma.booking.findUnique({
@@ -204,9 +210,14 @@ export async function PATCH(req) {
       where: { id: booking.id },
       data: {
         status: nextStatus,
-        confirmedAt: nextStatus === "CONFIRMED" ? (booking.confirmedAt || new Date()) : booking.confirmedAt,
-        confirmationToken: nextStatus === "CONFIRMED" ? null : booking.confirmationToken,
-        tokenExpiresAt: nextStatus === "CONFIRMED" ? null : booking.tokenExpiresAt,
+        confirmedAt:
+          nextStatus === "CONFIRMED"
+            ? booking.confirmedAt || new Date()
+            : booking.confirmedAt,
+        confirmationToken:
+          nextStatus === "CONFIRMED" ? null : booking.confirmationToken,
+        tokenExpiresAt:
+          nextStatus === "CONFIRMED" ? null : booking.tokenExpiresAt,
       },
     });
 
