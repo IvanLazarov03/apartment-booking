@@ -29,6 +29,10 @@ function getErrorMessage(error: unknown) {
 }
 
 export default function AdminBlockedDates() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const minDate = today.toISOString().split("T")[0];
+
   const [blockedDates, setBlockedDates] = useState<BlockedDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -147,7 +151,8 @@ export default function AdminBlockedDates() {
             Blocked Dates
           </h1>
           <p className="mt-2 text-sm text-neutral-500">
-            Manually close dates for maintenance, private stays, or unavailable periods.
+            Manually close dates for maintenance, private stays, or unavailable
+            periods.
           </p>
         </div>
 
@@ -181,21 +186,29 @@ export default function AdminBlockedDates() {
 
           <div className="mt-6 space-y-4">
             <div>
-              <label className="mb-2 block text-sm text-neutral-600">Start date</label>
+              <label className="mb-2 block text-sm text-neutral-600">
+                Start date
+              </label>
               <input
                 type="date"
                 value={form.startDate}
-                onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                min={minDate}
+                onChange={(e) =>
+                  setForm({ ...form, startDate: e.target.value, endDate: "" })
+                }
                 className={inputClass}
                 required
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm text-neutral-600">End date</label>
+              <label className="mb-2 block text-sm text-neutral-600">
+                End date
+              </label>
               <input
                 type="date"
                 value={form.endDate}
+                min={form.startDate || minDate}
                 onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                 className={inputClass}
                 required
@@ -203,7 +216,9 @@ export default function AdminBlockedDates() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm text-neutral-600">Reason</label>
+              <label className="mb-2 block text-sm text-neutral-600">
+                Reason
+              </label>
               <input
                 type="text"
                 value={form.reason}
@@ -237,10 +252,14 @@ export default function AdminBlockedDates() {
             Current Blocked Dates
           </h2>
 
-          {loading && <p className="mt-5 text-sm text-neutral-500">Loading dates...</p>}
+          {loading && (
+            <p className="mt-5 text-sm text-neutral-500">Loading dates...</p>
+          )}
 
           {!loading && blockedDates.length === 0 && (
-            <p className="mt-5 text-sm text-neutral-500">No blocked dates yet.</p>
+            <p className="mt-5 text-sm text-neutral-500">
+              No blocked dates yet.
+            </p>
           )}
 
           <div className="mt-5 space-y-3">
@@ -251,7 +270,8 @@ export default function AdminBlockedDates() {
               >
                 <div>
                   <p className="font-medium text-[#1a1a18]">
-                    {formatDate(blockedDate.startDate)} - {formatDate(blockedDate.endDate)}
+                    {formatDate(blockedDate.startDate)} -{" "}
+                    {formatDate(blockedDate.endDate)}
                   </p>
                   <p className="mt-1 text-sm text-neutral-500">
                     {blockedDate.bookingId

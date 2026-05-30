@@ -17,6 +17,13 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Something went wrong";
 }
 
+function isPastOrToday(dateStr: string) {
+  const checkIn = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return checkIn <= today;
+}
+
 export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -128,63 +135,80 @@ export default function AdminBookings() {
           <p className="text-neutral-500">No bookings yet.</p>
         )}
 
-        {bookings.map((b) => (
-          <div
-            key={b.id}
-            className="bg-white border border-neutral-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-sm"
-          >
-            {/* Info */}
-            <div>
-              <h2 className="text-lg font-medium">{b.guestName}</h2>
-              <p className="text-sm text-neutral-500">{b.guestEmail}</p>
+        {bookings.map((b) => {
+          const alreadyStarted = isPastOrToday(b.checkIn);
 
-              <p className="text-sm mt-2 text-neutral-600">
-                {new Date(b.checkIn).toDateString()} →{" "}
-                {new Date(b.checkOut).toDateString()}
-              </p>
+          return (
+            <div
+              key={b.id}
+              className="bg-white border border-neutral-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-sm"
+            >
+              {/* Info */}
+              <div>
+                <h2 className="text-lg font-medium">{b.guestName}</h2>
+                <p className="text-sm text-neutral-500">{b.guestEmail}</p>
 
-              <p className="text-xs mt-1 text-neutral-400">
-                Guests: {b.guestsCount}
-              </p>
+                <p className="text-sm mt-2 text-neutral-600">
+                  {new Date(b.checkIn).toDateString()} →{" "}
+                  {new Date(b.checkOut).toDateString()}
+                </p>
 
-              <span
-                className={`inline-block mt-2 px-3 py-1 text-xs rounded-full
-                  ${
-                    normalizeStatus(b.status) === "CONFIRMED"
-                      ? "bg-green-100 text-green-700"
-                      : normalizeStatus(b.status) === "PENDING"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : normalizeStatus(b.status) === "EXPIRED"
-                          ? "bg-red-100 text-red-600"
-                          : "bg-neutral-100 text-neutral-600"
-                  }`}
-              >
-                {normalizeStatus(b.status)}
-              </span>
-            </div>
+                <p className="text-xs mt-1 text-neutral-400">
+                  Guests: {b.guestsCount}
+                </p>
 
-            {/* Actions */}
-            <div className="flex gap-2">
-              {normalizeStatus(b.status) === "PENDING" && (
-                <button
-                  onClick={() => updateStatus(b.id, "CONFIRMED")}
-                  className="px-4 py-2 rounded-xl bg-[#2d4a3e] text-white text-sm"
+                <span
+                  className={`inline-block mt-2 px-3 py-1 text-xs rounded-full
+                    ${
+                      normalizeStatus(b.status) === "CONFIRMED"
+                        ? "bg-green-100 text-green-700"
+                        : normalizeStatus(b.status) === "PENDING"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : normalizeStatus(b.status) === "EXPIRED"
+                            ? "bg-red-100 text-red-600"
+                            : "bg-neutral-100 text-neutral-600"
+                    }`}
                 >
-                  Confirm
-                </button>
-              )}
+                  {normalizeStatus(b.status)}
+                </span>
+              </div>
 
-              {normalizeStatus(b.status) !== "CANCELLED" && (
-                <button
-                  onClick={() => updateStatus(b.id, "CANCELLED")}
-                  className="px-4 py-2 rounded-xl bg-red-500 text-white text-sm"
-                >
-                  Cancel
-                </button>
-              )}
+              {/* Actions */}
+              <div className="flex gap-2">
+                {normalizeStatus(b.status) === "PENDING" && (
+                  <button
+                    onClick={() => updateStatus(b.id, "CONFIRMED")}
+                    className="px-4 py-2 rounded-xl bg-[#2d4a3e] hover:bg-[#243d33] transition-colors text-white text-sm"
+                  >
+                    Confirm
+                  </button>
+                )}
+
+                {normalizeStatus(b.status) !== "CANCELLED" && (
+                  <button
+                    onClick={() =>
+                      !alreadyStarted && updateStatus(b.id, "CANCELLED")
+                    }
+                    disabled={alreadyStarted}
+                    title={
+                      alreadyStarted
+                        ? "Cannot cancel a booking that has already started"
+                        : undefined
+                    }
+                    className={`px-4 py-2 rounded-xl text-sm text-white transition-colors
+                      ${
+                        alreadyStarted
+                          ? "bg-neutral-300 cursor-not-allowed"
+                          : "bg-red-500 hover:bg-red-600"
+                      }`}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

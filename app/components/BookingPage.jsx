@@ -3,13 +3,17 @@
 import { useState } from "react";
 
 export default function BookingPage() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split("T")[0];
+
   const [form, setForm] = useState({
     email: "",
     name: "",
     arrival: "",
     departure: "",
     adults: "1",
-    children: "",
+    children: "0",
     specialRequest: "",
   });
 
@@ -23,11 +27,9 @@ export default function BookingPage() {
     try {
       const response = await fetch("/api/bookings", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify(form),
       });
 
@@ -51,7 +53,6 @@ export default function BookingPage() {
       });
     } catch (error) {
       console.log(error);
-
       alert("Something went wrong");
     }
   };
@@ -87,7 +88,7 @@ export default function BookingPage() {
       </div>
 
       {/* Form */}
-      <div className=" bg-[#fafaf8] ">
+      <div className="bg-[#fafaf8]">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <form onSubmit={handleSubmit}>
             {/* Row 1 — Email & Name */}
@@ -131,6 +132,7 @@ export default function BookingPage() {
                   id="arrival"
                   name="arrival"
                   value={form.arrival}
+                  min={minDate}
                   onChange={handleChange}
                   className={inputClass}
                 />
@@ -144,6 +146,7 @@ export default function BookingPage() {
                   id="departure"
                   name="departure"
                   value={form.departure}
+                  min={form.arrival || minDate}
                   onChange={handleChange}
                   className={inputClass}
                 />
