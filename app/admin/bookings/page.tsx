@@ -19,6 +19,7 @@ function getErrorMessage(error: unknown) {
 
 function isPastOrToday(dateStr: string) {
   const checkIn = new Date(dateStr);
+  checkIn.setHours(0, 0, 0, 0);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return checkIn <= today;
@@ -184,27 +185,15 @@ export default function AdminBookings() {
                   </button>
                 )}
 
-                {normalizeStatus(b.status) !== "CANCELLED" && (
-                  <button
-                    onClick={() =>
-                      !alreadyStarted && updateStatus(b.id, "CANCELLED")
-                    }
-                    disabled={alreadyStarted}
-                    title={
-                      alreadyStarted
-                        ? "Cannot cancel a booking that has already started"
-                        : undefined
-                    }
-                    className={`px-4 py-2 rounded-xl text-sm text-white transition-colors
-                      ${
-                        alreadyStarted
-                          ? "bg-neutral-300 cursor-not-allowed"
-                          : "bg-red-500 hover:bg-red-600"
-                      }`}
-                  >
-                    Cancel
-                  </button>
-                )}
+                {normalizeStatus(b.status) !== "CANCELLED" &&
+                  !alreadyStarted && (
+                    <button
+                      onClick={() => updateStatus(b.id, "CANCELLED")}
+                      className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 transition-colors text-white text-sm"
+                    >
+                      Cancel
+                    </button>
+                  )}
               </div>
             </div>
           );
