@@ -150,6 +150,61 @@ export default function AdminDashboard() {
     };
   }, [bookings, blockedDates]);
 
+  const formatCsvValue = (value: string | number) =>
+    `"${value.toString().replace(/"/g, '""')}"`;
+
+  const downloadStatsCsv = () => {
+    const csvRows = [
+      ["Metric", "Value", "Description"],
+      ["Total bookings", stats.totalBookings, "All bookings"],
+      [
+        "Confirmed bookings",
+        stats.confirmedBookings,
+        "Confirmed reservation count",
+      ],
+      [
+        "Pending bookings",
+        stats.pendingBookings,
+        "Bookings awaiting confirmation",
+      ],
+      ["Cancelled bookings", stats.cancelledBookings, "Cancelled reservations"],
+      [
+        "Estimated revenue",
+        `€${stats.estimatedRevenue.toLocaleString()}`,
+        "Revenue from confirmed stays",
+      ],
+      [
+        "Monthly revenue",
+        `€${stats.monthlyRevenue.toLocaleString()}`,
+        "This month's confirmed revenue",
+      ],
+      [
+        "Occupancy rate",
+        `${stats.occupancyRate}%`,
+        "Estimated occupancy for next 30 days",
+      ],
+      [
+        "Manual blocks",
+        stats.manuallyBlocked,
+        "Blocked dates not tied to bookings",
+      ],
+      ["Exported at", new Date().toLocaleString(), "Export timestamp"],
+    ];
+
+    const csvContent = csvRows
+      .map((row) => row.map(formatCsvValue).join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+
+    anchor.href = url;
+    anchor.download = `dashboard-stats-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
   const recentBookings = bookings.slice(0, 5);
   const upcomingBlocks = blockedDates
     .filter((blockedDate) => new Date(blockedDate.endDate) >= new Date())
@@ -186,6 +241,13 @@ export default function AdminDashboard() {
           >
             Block Dates
           </Link>
+          <button
+            type="button"
+            onClick={downloadStatsCsv}
+            className="rounded-2xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-700 transition-all hover:bg-neutral-50"
+          >
+            Export Stats
+          </button>
           {/* ✅ Logout button */}
           <button
             onClick={() => {
