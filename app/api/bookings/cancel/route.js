@@ -21,23 +21,18 @@ export async function GET(req) {
       return NextResponse.redirect(new URL("/booking-cancelled", req.url));
     }
 
-    // 3. Expired token
-    if (!booking.tokenExpiresAt || booking.tokenExpiresAt < new Date()) {
-      await prisma.booking.update({
-        where: { id: booking.id },
-        data: {
-          status: "EXPIRED",
-          confirmationToken: null,
-          tokenExpiresAt: null,
-        },
-      });
-
-      return NextResponse.redirect(new URL("/booking-expired", req.url));
-    }
-
-    // 4. Already cancelled guard
+    // 3. Already cancelled guard
     if (booking.status === "CANCELLED") {
       return NextResponse.redirect(new URL("/booking-cancelled", req.url));
+    }
+
+    // 4. Cancel allowed only until one week before check-in
+    const now = new Date();
+    const latestCancelDate = new Date(booking.checkIn);
+    latestCancelDate.setDate(latestCancelDate.getDate() - 7);
+
+    if (now > latestCancelDate) {
+      return NextResponse.redirect(new URL("/booking-confirmed", req.url));
     }
 
     // 5. Cancel the booking

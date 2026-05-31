@@ -3,13 +3,29 @@ import { prisma } from "@/lib/prisma";
 import { transporter } from "@/lib/mail";
 import crypto from "crypto";
 
+const NIGHTLY_RATE = 50;
+
+function nightsBetween(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diff = end.getTime() - start.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+function addTotalPrice(booking) {
+  return {
+    ...booking,
+    totalPrice: nightsBetween(booking.checkIn, booking.checkOut) * NIGHTLY_RATE,
+  };
+}
+
 export async function GET() {
   try {
     const bookings = await prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(bookings);
+    return NextResponse.json(bookings.map(addTotalPrice));
   } catch (error) {
     console.error(error);
 
@@ -79,6 +95,7 @@ export async function POST(req) {
       },
     });
 
+    const totalPrice = nightsBetween(arrivalDate, departureDate) * NIGHTLY_RATE;
     const confirmUrl = `http://localhost:3000/api/bookings/confirm?token=${token}`;
     const cancelUrl = `http://localhost:3000/api/bookings/cancel?token=${token}`;
 
@@ -145,6 +162,7 @@ export async function POST(req) {
           <div style="background: #f7f7f5; padding: 16px; border-radius: 10px;">
             <p><strong>Arrival:</strong> ${arrival}</p>
             <p><strong>Departure:</strong> ${departure}</p>
+            <p><strong>Total due:</strong> €${totalPrice}</p>
           </div>
 
           <p style="margin-top: 32px; font-size: 13px; color: #777;">
@@ -154,7 +172,10 @@ export async function POST(req) {
       `,
     });
 
-    return NextResponse.json({ success: true, booking });
+    return NextResponse.json({
+      success: true,
+      booking: addTotalPrice(booking),
+    });
   } catch (error) {
     console.error(error);
 

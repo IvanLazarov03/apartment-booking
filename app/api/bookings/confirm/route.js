@@ -21,7 +21,12 @@ export async function GET(req) {
       return NextResponse.redirect(new URL("/booking-expired", req.url));
     }
 
-    // 3. Expired token check
+    // 3. Already processed guard
+    if (booking.status !== "PENDING") {
+      return NextResponse.redirect(new URL("/booking-confirmed", req.url));
+    }
+
+    // 4. Expired token check for pending bookings
     if (!booking.tokenExpiresAt || booking.tokenExpiresAt < new Date()) {
       await prisma.booking.update({
         where: { id: booking.id },
@@ -35,17 +40,7 @@ export async function GET(req) {
       return NextResponse.redirect(new URL("/booking-expired", req.url));
     }
 
-    // already processed guard
-    if (booking.status !== "PENDING") {
-      return NextResponse.redirect(new URL("/booking-confirmed", req.url));
-    }
-
-    // 4. Already confirmed
-    if (booking.status === "CONFIRMED") {
-      return NextResponse.redirect(new URL("/booking-confirmed", req.url));
-    }
-
-    // 5. Confirm booking (IMPORTANT FIX HERE)
+    // 5. Confirm booking
     const updatedBooking = await prisma.booking.update({
       where: {
         id: booking.id,
@@ -53,8 +48,8 @@ export async function GET(req) {
       data: {
         status: "CONFIRMED",
         confirmedAt: new Date(),
-        confirmationToken: null,
-        tokenExpiresAt: null,
+        // Keep confirmationToken so cancel-by-email can still use the same token
+        tokenExpiresAt: booking.tokenExpiresAt,
       },
     });
 
