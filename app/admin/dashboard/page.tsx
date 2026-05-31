@@ -237,7 +237,7 @@ export default function AdminDashboard() {
           </Link>
           <Link
             href="/admin/blocked-dates"
-            className="rounded-2xl bg-[#2d4a3e] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#243a31]"
+            className="rounded-2xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-700 transition-all hover:bg-neutral-50"
           >
             Block Dates
           </Link>

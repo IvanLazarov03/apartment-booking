@@ -261,6 +261,55 @@ export async function PATCH(req) {
       });
     }
 
+    // Send cancellation email to guest if booking is being cancelled
+    if (nextStatus === "CANCELLED") {
+      try {
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: booking.guestEmail,
+          subject: "Your Booking Has Been Cancelled",
+          html: `
+            <div style="
+              font-family: Arial;
+              padding: 24px;
+              max-width: 600px;
+              margin: auto;
+              background: #ffffff;
+              border: 1px solid #e5e5e5;
+              border-radius: 12px;
+            ">
+              <h1 style="font-size: 28px; margin-bottom: 16px; color: #1a1a18;">
+                Booking Cancelled
+              </h1>
+
+              <p style="font-size: 15px; color: #444;">
+                Hello ${booking.guestName},
+              </p>
+
+              <p style="font-size: 15px; color: #444; line-height: 1.7;">
+                We regret to inform you that your booking has been cancelled. 
+                If you have any questions or would like to discuss this further, please contact us.
+              </p>
+
+              <div style="background: #f7f7f5; padding: 16px; border-radius: 10px; margin-top: 24px;">
+                <p><strong>Booking ID:</strong> #${booking.id}</p>
+                <p><strong>Arrival:</strong> ${new Date(booking.checkIn).toDateString()}</p>
+                <p><strong>Departure:</strong> ${new Date(booking.checkOut).toDateString()}</p>
+                <p><strong>Number of Guests:</strong> ${booking.guestsCount}</p>
+              </div>
+
+              <p style="margin-top: 32px; font-size: 13px; color: #777;">
+                — The Habitat Team
+              </p>
+            </div>
+          `,
+        });
+      } catch (emailError) {
+        console.error("Failed to send cancellation email:", emailError);
+        // Don't fail the booking update if email fails
+      }
+    }
+
     return NextResponse.json(updatedBooking);
   } catch (error) {
     console.error(error);
