@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
+import jsPDF from "jspdf";
 
 type Booking = {
   id: number;
@@ -150,59 +151,105 @@ export default function AdminDashboard() {
     };
   }, [bookings, blockedDates]);
 
-  const formatCsvValue = (value: string | number) =>
-    `"${value.toString().replace(/"/g, '""')}"`;
+  const downloadStatsPdf = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPosition = 20;
 
-  const downloadStatsCsv = () => {
-    const csvRows = [
-      ["Metric", "Value", "Description"],
-      ["Total bookings", stats.totalBookings, "All bookings"],
-      [
-        "Confirmed bookings",
-        stats.confirmedBookings,
-        "Confirmed reservation count",
-      ],
-      [
-        "Pending bookings",
-        stats.pendingBookings,
-        "Bookings awaiting confirmation",
-      ],
-      ["Cancelled bookings", stats.cancelledBookings, "Cancelled reservations"],
-      [
-        "Estimated revenue",
-        `€${stats.estimatedRevenue.toLocaleString()}`,
-        "Revenue from confirmed stays",
-      ],
-      [
-        "Monthly revenue",
-        `€${stats.monthlyRevenue.toLocaleString()}`,
-        "This month's confirmed revenue",
-      ],
-      [
-        "Occupancy rate",
-        `${stats.occupancyRate}%`,
-        "Estimated occupancy for next 30 days",
-      ],
-      [
-        "Manual blocks",
-        stats.manuallyBlocked,
-        "Blocked dates not tied to bookings",
-      ],
-      ["Exported at", new Date().toLocaleString(), "Export timestamp"],
+    // Title
+    doc.setFontSize(18);
+    doc.text("Dashboard Statistics Report", pageWidth / 2, yPosition, {
+      align: "center",
+    });
+
+    // Subtitle with date
+    doc.setFontSize(10);
+    yPosition += 15;
+    doc.text(
+      `Generated on ${new Date().toLocaleString()}`,
+      pageWidth / 2,
+      yPosition,
+      {
+        align: "center",
+      },
+    );
+
+    // Content
+    yPosition += 20;
+    doc.setFontSize(12);
+
+    const statsData = [
+      {
+        label: "Total Bookings",
+        value: stats.totalBookings,
+        description: "All bookings",
+      },
+      {
+        label: "Confirmed Bookings",
+        value: stats.confirmedBookings,
+        description: "Confirmed reservation count",
+      },
+      {
+        label: "Pending Bookings",
+        value: stats.pendingBookings,
+        description: "Bookings awaiting confirmation",
+      },
+      {
+        label: "Cancelled Bookings",
+        value: stats.cancelledBookings,
+        description: "Cancelled reservations",
+      },
+      {
+        label: "Estimated Revenue",
+        value: `€${stats.estimatedRevenue.toLocaleString()}`,
+        description: "Revenue from confirmed stays",
+      },
+      {
+        label: "Monthly Revenue",
+        value: `€${stats.monthlyRevenue.toLocaleString()}`,
+        description: "This month's confirmed revenue",
+      },
+      {
+        label: "Occupancy Rate",
+        value: `${stats.occupancyRate}%`,
+        description: "Estimated occupancy for next 30 days",
+      },
+      {
+        label: "Manual Blocks",
+        value: stats.manuallyBlocked,
+        description: "Blocked dates not tied to bookings",
+      },
     ];
 
-    const csvContent = csvRows
-      .map((row) => row.map(formatCsvValue).join(","))
-      .join("\n");
+    doc.setFontSize(11);
+    statsData.forEach((stat) => {
+      doc.setTextColor(0, 0, 0);
+      doc.text(`${stat.label}:`, 20, yPosition);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`${stat.value}`, 100, yPosition);
+      doc.setTextColor(150, 150, 150);
+      doc.setFontSize(9);
+      doc.text(`(${stat.description})`, 100, yPosition + 5);
+      doc.setFontSize(11);
+      yPosition += 15;
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
+      // Add page break if needed
+      if (yPosition > pageHeight - 20) {
+        doc.addPage();
+        yPosition = 20;
+      }
+    });
 
-    anchor.href = url;
-    anchor.download = `dashboard-stats-${new Date().toISOString().slice(0, 10)}.csv`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.text("© Apartment Booking System", pageWidth / 2, pageHeight - 10, {
+      align: "center",
+    });
+
+    // Save the PDF
+    doc.save(`dashboard-stats-${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
   const recentBookings = bookings.slice(0, 5);
@@ -243,10 +290,10 @@ export default function AdminDashboard() {
           </Link>
           <button
             type="button"
-            onClick={downloadStatsCsv}
+            onClick={downloadStatsPdf}
             className="rounded-2xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-700 transition-all hover:bg-neutral-50"
           >
-            Export Stats
+            Export PDF
           </button>
           {/* ✅ Logout button */}
           <button
